@@ -3,69 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Le jeu</title>
+  <title>Les jeux</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <main>
-    <div id="jeu">
-      <h2>🎯 Devine le nombre !</h2>
-      <p id="consigne">J'ai choisi un nombre entre 1 et 10.</p>
+  <header class="menu">
+        <nav>
+      <a href="index.html">Accueil</a>
+      <a href="page2.html" class="actif">Jeux</a>
+    </nav>
+  </header>
 
+  <main class="page-jeu">
+
+    <!-- Choix du jeu -->
+    <section id="choix">
+      <h2 class="titre-choix">À quoi veux-tu jouer ?</h2>
+      <div class="blocs">
+        <article class="carte carte-jeu" data-jeu="nombre">
+          <div class="icone">🎯</div>
+          <h2>Devine le nombre</h2>
+        </article>
+        <article class="carte carte-jeu" data-jeu="pendu">
+          <div class="icone">🔤</div>
+          <h2>Pendu</h2>
+        </article>
+        <article class="carte carte-jeu" data-jeu="snake">
+          <div class="icone">🐍</div>
+          <h2>Snake</h2>
+        </article>
+      </div>
+    </section>
+
+    <!-- Jeu 1 : Devine le nombre -->
+    <div id="jeu-nombre" class="jeu cache">
+      <h2>🎯 Devine le nombre !</h2>
+      <p>J'ai choisi un nombre entre 1 et 10.</p>
       <div class="ligne-jeu">
         <input type="number" id="reponse" min="1" max="10" placeholder="?">
         <button id="valider" class="petit-bouton">Valider</button>
       </div>
-
-      <div id="message"></div>
+      <div id="message" class="message"></div>
       <div id="essais">Essais : 0</div>
-
-      <div class="ligne-jeu">
-        <button id="rejouer" class="petit-bouton cache">Rejouer</button>
-      </div>
+      <button id="rejouer" class="petit-bouton cache">Rejouer</button>
+      <button class="petit-bouton bouton-retour">← Choisir un autre jeu</button>
     </div>
 
-    <a href="index.html" class="lien-bouton lien-retour">Retour</a>
+    <!-- Jeu 2 : Pendu -->
+    <div id="jeu-pendu" class="jeu cache">
+      <h2>🔤 Le pendu</h2>
+
+      <svg id="dessin-pendu" viewBox="0 0 120 140" width="150" height="175">
+        <g stroke="#6b1a3a" stroke-width="4" stroke-linecap="round" fill="none">
+          <line x1="15" y1="130" x2="105" y2="130"/>
+          <line x1="35" y1="130" x2="35" y2="15"/>
+          <line x1="35" y1="15" x2="85" y2="15"/>
+          <line x1="85" y1="15" x2="85" y2="30"/>
+          <circle id="p1" cx="85" cy="42" r="12" class="cache"/>
+          <line id="p2" x1="85" y1="54" x2="85" y2="90" class="cache"/>
+          <line id="p3" x1="85" y1="62" x2="68" y2="78" class="cache"/>
+          <line id="p4" x1="85" y1="62" x2="102" y2="78" class="cache"/>
+          <line id="p5" x1="85" y1="90" x2="70" y2="115" class="cache"/>
+          <line id="p6" x1="85" y1="90" x2="100" y2="115" class="cache"/>
+        </g>
+      </svg>
+
+      <div id="mot-pendu"></div>
+      <div id="info-pendu">Erreurs : 0 / 6</div>
+      <div id="clavier"></div>
+      <div id="message-pendu" class="message"></div>
+      <button id="rejouer-pendu" class="petit-bouton">Nouveau mot</button>
+      <button class="petit-bouton bouton-retour">← Choisir un autre jeu</button>
+    </div>
+
+    <!-- Jeu 3 : Snake -->
+    <div id="jeu-snake" class="jeu cache">
+      <h2>🐍 Snake</h2>
+      <p>Mange les pommes sans toucher les murs ni ta queue.</p>
+      <div id="score-snake">Score : 0</div>
+      <canvas id="canvas-snake" width="300" height="300"></canvas>
+
+      <div class="fleches">
+        <button class="petit-bouton" data-dir="haut">⬆️</button>
+        <div>
+          <button class="petit-bouton" data-dir="gauche">⬅️</button>
+          <button class="petit-bouton" data-dir="bas">⬇️</button>
+          <button class="petit-bouton" data-dir="droite">➡️</button>
+        </div>
+      </div>
+
+      <div id="message-snake" class="message"></div>
+      <button id="jouer-snake" class="petit-bouton">Jouer</button>
+      <button class="petit-bouton bouton-retour">← Choisir un autre jeu</button>
+    </div>
+
   </main>
 
-  <footer>Selma - 2026</footer>
+  <footer class="pied">
+    <p>© 2026 Selma · Tous droits réservés</p>
+  </footer>
 
   <script>
+    /* ---------- Navigation entre les jeux ---------- */
+    const choix = document.getElementById("choix");
+    const jeux = {
+      nombre: document.getElementById("jeu-nombre"),
+      pendu: document.getElementById("jeu-pendu"),
+      snake: document.getElementById("jeu-snake")
+    };
+    let jeuActuel = null;
+
+    function afficherJeu(nom) {
+      choix.classList.add("cache");
+      jeux[nom].classList.remove("cache");
+      jeuActuel = nom;
+      if (nom === "nombre") recommencerNombre();
+      if (nom === "pendu") demarrerPendu();
+      if (nom === "snake") preparerSnake();
+    }
+
+    function afficherChoix() {
+      arreterSnake();
+      Object.values(jeux).forEach(j => j.classList.add("cache"));
+      choix.classList.remove("cache");
+      jeuActuel = null;
+    }
+
+    document.querySelectorAll(".carte-jeu").forEach(carte => {
+      carte.addEventListener("click", () => afficherJeu(carte.dataset.jeu));
+    });
+    document.querySelectorAll(".bouton-retour").forEach(b => {
+      b.addEventListener("click", afficherChoix);
+    });
+
+    /* ---------- Jeu 1 : Devine le nombre ---------- */
     const reponse  = document.getElementById("reponse");
     const valider  = document.getElementById("valider");
     const rejouer  = document.getElementById("rejouer");
     const message  = document.getElementById("message");
     const essaisEl = document.getElementById("essais");
-
-    let secret = nombreAuHasard();
+    let secret = 0;
     let essais = 0;
 
-    function nombreAuHasard() {
-      return Math.floor(Math.random() * 10) + 1;
-    }
-
-    function recommencer() {
-      secret = nombreAuHasard();
+    function recommencerNombre() {
+      secret = Math.floor(Math.random() * 10) + 1;
       essais = 0;
       essaisEl.textContent = "Essais : 0";
       message.textContent = "";
       reponse.value = "";
       valider.classList.remove("cache");
       rejouer.classList.add("cache");
+      reponse.focus();
     }
 
     function verifier() {
       const nombre = parseInt(reponse.value);
-
       if (isNaN(nombre) || nombre < 1 || nombre > 10) {
         message.textContent = "Entre un nombre entre 1 et 10 😉";
         return;
       }
-
       essais++;
       essaisEl.textContent = "Essais : " + essais;
-
       if (nombre === secret) {
         message.textContent = "🎉 Bravo ! Trouvé en " + essais + " essai(s) !";
         valider.classList.add("cache");
@@ -75,19 +174,207 @@
       } else {
         message.textContent = "⬇️ Plus petit !";
       }
-
       reponse.value = "";
       reponse.focus();
     }
 
     valider.addEventListener("click", verifier);
-    reponse.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") verifier();
+    reponse.addEventListener("keydown", e => { if (e.key === "Enter") verifier(); });
+    rejouer.addEventListener("click", recommencerNombre);
+
+    /* ---------- Jeu 2 : Pendu ---------- */
+    const mots = ["papillon", "chocolat", "princesse", "licorne", "maquillage",
+                  "parfum", "bonbon", "fleur", "bijoux", "cerise", "vacances",
+                  "etoile", "gateau", "cinema", "musique", "voyage"];
+    const MAX_ERREURS = 6;
+    let motSecret = "";
+    let trouvees = [];
+    let erreurs = 0;
+
+    const motEl = document.getElementById("mot-pendu");
+    const infoPendu = document.getElementById("info-pendu");
+    const msgPendu = document.getElementById("message-pendu");
+    const clavier = document.getElementById("clavier");
+
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(lettre => {
+      const b = document.createElement("button");
+      b.textContent = lettre;
+      b.className = "lettre";
+      b.addEventListener("click", () => jouerLettre(lettre.toLowerCase(), b));
+      clavier.appendChild(b);
     });
-    rejouer.addEventListener("click", function () {
-      recommencer();
-      reponse.focus();
+
+    function afficherMot() {
+      motEl.textContent = motSecret.split("")
+        .map(l => trouvees.includes(l) ? l.toUpperCase() : "_").join(" ");
+    }
+
+    function demarrerPendu() {
+      motSecret = mots[Math.floor(Math.random() * mots.length)];
+      trouvees = [];
+      erreurs = 0;
+      msgPendu.textContent = "";
+      infoPendu.textContent = "Erreurs : 0 / " + MAX_ERREURS;
+      for (let i = 1; i <= MAX_ERREURS; i++) {
+        document.getElementById("p" + i).classList.add("cache");
+      }
+      clavier.querySelectorAll("button").forEach(b => b.disabled = false);
+      afficherMot();
+    }
+
+    function finPendu(texte) {
+      msgPendu.textContent = texte;
+      clavier.querySelectorAll("button").forEach(b => b.disabled = true);
+    }
+
+    function jouerLettre(lettre, bouton) {
+      bouton.disabled = true;
+      if (motSecret.includes(lettre)) {
+        trouvees.push(lettre);
+        afficherMot();
+        if (motSecret.split("").every(l => trouvees.includes(l))) {
+          finPendu("🎉 Bravo, tu as trouvé !");
+        }
+      } else {
+        erreurs++;
+        document.getElementById("p" + erreurs).classList.remove("cache");
+        infoPendu.textContent = "Erreurs : " + erreurs + " / " + MAX_ERREURS;
+        if (erreurs >= MAX_ERREURS) {
+          trouvees = motSecret.split("");
+          afficherMot();
+          finPendu("😢 Perdu ! Le mot était : " + motSecret.toUpperCase());
+        }
+      }
+    }
+
+    document.getElementById("rejouer-pendu").addEventListener("click", demarrerPendu);
+
+    /* ---------- Jeu 3 : Snake ---------- */
+    const canvas = document.getElementById("canvas-snake");
+    const ctx = canvas.getContext("2d");
+    const CASES = 15;
+    const TAILLE = canvas.width / CASES;
+    const scoreSnakeEl = document.getElementById("score-snake");
+    const msgSnake = document.getElementById("message-snake");
+    const boutonSnake = document.getElementById("jouer-snake");
+
+    let serpent = [];
+    let dir = { x: 1, y: 0 };
+    let prochaineDir = { x: 1, y: 0 };
+    let pomme = { x: 10, y: 7 };
+    let scoreSnake = 0;
+    let record = 0;
+    let minuteur = null;
+
+    function arreterSnake() {
+      clearInterval(minuteur);
+      minuteur = null;
+    }
+
+    function preparerSnake() {
+      arreterSnake();
+      serpent = [{ x: 7, y: 7 }, { x: 6, y: 7 }, { x: 5, y: 7 }];
+      scoreSnake = 0;
+      scoreSnakeEl.textContent = "Score : 0";
+      msgSnake.textContent = "";
+      boutonSnake.textContent = "Jouer";
+      pomme = { x: 11, y: 7 };
+      dessiner();
+    }
+
+    function placerPomme() {
+      do {
+        pomme = {
+          x: Math.floor(Math.random() * CASES),
+          y: Math.floor(Math.random() * CASES)
+        };
+      } while (serpent.some(s => s.x === pomme.x && s.y === pomme.y));
+    }
+
+    function demarrerSnake() {
+      preparerSnake();
+      dir = { x: 1, y: 0 };
+      prochaineDir = { x: 1, y: 0 };
+      placerPomme();
+      minuteur = setInterval(pas, 130);
+      dessiner();
+    }
+
+    function pas() {
+      dir = prochaineDir;
+      const tete = { x: serpent[0].x + dir.x, y: serpent[0].y + dir.y };
+
+      const dehors = tete.x < 0 || tete.y < 0 || tete.x >= CASES || tete.y >= CASES;
+      const surLuiMeme = serpent.some(s => s.x === tete.x && s.y === tete.y);
+      if (dehors || surLuiMeme) {
+        arreterSnake();
+        if (scoreSnake > record) record = scoreSnake;
+        msgSnake.textContent = "💥 Perdu ! Score : " + scoreSnake + " (record : " + record + ")";
+        boutonSnake.textContent = "Rejouer";
+        return;
+      }
+
+      serpent.unshift(tete);
+      if (tete.x === pomme.x && tete.y === pomme.y) {
+        scoreSnake++;
+        scoreSnakeEl.textContent = "Score : " + scoreSnake;
+        placerPomme();
+      } else {
+        serpent.pop();
+      }
+      dessiner();
+    }
+
+    function dessiner() {
+      ctx.fillStyle = "#ffe3ef";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = (TAILLE - 4) + "px serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🍎", pomme.x * TAILLE + TAILLE / 2, pomme.y * TAILLE + TAILLE / 2 + 1);
+
+      serpent.forEach((s, i) => {
+        ctx.fillStyle = i === 0 ? "#8d0a3f" : "#d6409f";
+        ctx.beginPath();
+        ctx.roundRect(s.x * TAILLE + 1, s.y * TAILLE + 1, TAILLE - 2, TAILLE - 2, 6);
+        ctx.fill();
+      });
+    }
+
+    function changerDirection(nom) {
+      if (!minuteur) return;
+      const d = {
+        haut:   { x: 0,  y: -1 },
+        bas:    { x: 0,  y: 1 },
+        gauche: { x: -1, y: 0 },
+        droite: { x: 1,  y: 0 }
+      }[nom];
+      if (d.x === -dir.x && d.y === -dir.y) return;
+      prochaineDir = d;
+    }
+
+    document.addEventListener("keydown", e => {
+      if (jeuActuel !== "snake") return;
+      const touches = {
+        ArrowUp: "haut", ArrowDown: "bas",
+        ArrowLeft: "gauche", ArrowRight: "droite"
+      };
+      if (touches[e.key]) {
+        e.preventDefault();
+        changerDirection(touches[e.key]);
+      }
     });
+
+    document.querySelectorAll(".fleches button").forEach(b => {
+      b.addEventListener("click", () => changerDirection(b.dataset.dir));
+    });
+
+    boutonSnake.addEventListener("click", demarrerSnake);
+
+    /* ---------- Ouvrir directement un jeu choisi depuis l'accueil ---------- */
+    const depart = location.hash.replace("#", "");
+    if (jeux[depart]) afficherJeu(depart);
   </script>
 
 </body>

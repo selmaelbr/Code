@@ -3,26 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ma première page</title>
+    <title>Les jeux - Accueil</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <header class="menu">
+
+    <nav>
+      <a href="index.html" class="actif">Accueil</a>
+      <a href="page2.html">Jeux</a>
+    </nav>
+  </header>
+ 
   <main>
-    <div id="accueil">
-      <h1>Bonjour tout le monde !</h1>
-      <p>Ceci est ma première page web.</p>
-
-      <div id="horloge">
-        <div id="date"></div>
-        <div id="heure"></div>
+    <section class="hero">
+      <h1>Envie de t'amuser ? </h1>
+      <div id="horloge-accueil">
+        <span id="date"></span> · <span id="heure"></span>
       </div>
+    </section>
 
-      <a href="page2.html" class="lien-bouton">Aller au jeu</a>
-    </div>
+    <section class="apercu">
+      <h2 class="titre-choix">Choisis ton jeu</h2>
+      <div class="blocs">
+        <a href="page2.html#nombre" class="carte carte-jeu lien-carte">
+          <div class="icone">🎯</div>
+          <h2>Devine le nombre</h2>
+          <p>Trouve le nombre secret.</p>
+        </a>
+        <a href="page2.html#pendu" class="carte carte-jeu lien-carte">
+          <div class="icone">🔤</div>
+          <h2>Pendu</h2>
+          <p>Devine le mot lettre par lettre.</p>
+        </a>
+        <a href="page2.html#snake" class="carte carte-jeu lien-carte">
+          <div class="icone">🐍</div>
+          <h2>Snake</h2>
+          <p>Mange les pommes sans te cogner.</p>
+        </a>
+      </div>
+    </section>
   </main>
 
-  <footer>Selma - 2026</footer>
+  <footer class="pied">
+    <p>© 2026 Selma · Tous droits réservés</p>
+  </footer>
 
   <script>
     function majHorloge() {
