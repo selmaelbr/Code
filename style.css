@@ -1,0 +1,220 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffb6d5, #ff9ec7);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pour cacher un élément */
+.cache {
+  display: none !important;
+}
+
+/* ---------- Écran d'accueil ---------- */
+#accueil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #8d0a3f;
+  text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.6);
+}
+
+#accueil > p {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #6b1a3a;
+  margin: 0 0 24px 0;
+}
+
+#horloge {
+  font-family: "Times New Roman", Times, serif;
+  color: #6b1a3a;
+  background: rgba(255, 255, 255, 0.45);
+  padding: 12px 28px;
+  border-radius: 20px;
+  margin-bottom: 32px;
+}
+
+#date {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+#heure {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Gros bouton rouge, animé */
+#bouton {
+  padding: 16px 44px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(180deg, #ff4d5a, #d90429);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #8d0220, 0 10px 20px rgba(0, 0, 0, 0.25);
+  animation: attire-oeil 1.4s ease-in-out infinite;
+}
+
+#bouton:hover {
+  animation: none;
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 #8d0220, 0 14px 24px rgba(0, 0, 0, 0.25);
+}
+
+#bouton:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #8d0220, 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes attire-oeil {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25%      { transform: scale(1.1) rotate(-3deg); }
+  50%      { transform: scale(1.15) rotate(0deg); }
+  75%      { transform: scale(1.1) rotate(3deg); }
+}
+
+/* ---------- Écran du jeu ---------- */
+#jeu {
+  font-family: "Times New Roman", Times, serif;
+  color: #6b1a3a;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 28px 36px;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: apparition 0.5s ease;
+}
+
+#jeu h2 {
+  margin: 0 0 8px 0;
+  font-size: 2.2rem;
+  color: #8d0a3f;
+}
+
+#consigne {
+  font-style: italic;
+  font-size: 1.3rem;
+  margin: 0 0 16px 0;
+}
+
+.ligne-jeu {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+#reponse {
+  width: 90px;
+  padding: 10px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1.5rem;
+  text-align: center;
+  border: 2px solid #ff9ec7;
+  border-radius: 12px;
+  outline: none;
+}
+
+#reponse:focus {
+  border-color: #d90429;
+}
+
+.petit-bouton {
+  padding: 10px 22px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: #d90429;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.petit-bouton:hover {
+  background: #ff4d5a;
+}
+
+/* Bouton Retour, plus discret */
+.bouton-clair {
+  background: #8d0a3f;
+}
+
+.bouton-clair:hover {
+  background: #b5124f;
+}
+
+#message {
+  font-size: 1.5rem;
+  font-weight: 700;
+  min-height: 2rem;
+  margin: 16px 0 6px 0;
+}
+
+#essais {
+  font-size: 1.1rem;
+  margin-bottom: 14px;
+}
+
+@keyframes apparition {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pied de page */
+footer {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 1.1rem;
+  color: #6b1a3a;
+  padding-top: 20px;
+}
+
+/* Écrans de téléphone */
+@media (max-width: 600px) {
+  h1 { font-size: 2.3rem; }
+  #accueil > p { font-size: 1.2rem; }
+  #heure { font-size: 1.6rem; }
+  #bouton { font-size: 1.4rem; }
+  #jeu { padding: 20px; }
+}.lien-bouton {
+  animation: attire-oeil 1.4s ease-in-out infinite;
+}
+
+.lien-bouton:hover {
+  animation: none;
+}
+
+.lien-retour {
+  margin-top: 28px;
+  font-size: 1.3rem;
+  padding: 10px 30px;
+  animation: none;
+}

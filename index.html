@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma première page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main>
+    <div id="accueil">
+      <h1>Bonjour tout le monde !</h1>
+      <p>Ceci est ma première page web.</p>
+
+      <div id="horloge">
+        <div id="date"></div>
+        <div id="heure"></div>
+      </div>
+
+      <a href="page2.html" class="lien-bouton">Aller au jeu</a>
+    </div>
+  </main>
+
+  <footer>Selma - 2026</footer>
+
+  <script>
+    function majHorloge() {
+      const maintenant = new Date();
+      document.getElementById("date").textContent =
+        maintenant.toLocaleDateString("fr-FR", {
+          weekday: "long", day: "numeric", month: "long", year: "numeric"
+        });
+      document.getElementById("heure").textContent =
+        maintenant.toLocaleTimeString("fr-FR");
+    }
+    majHorloge();
+    setInterval(majHorloge, 1000);
+  </script>
+
+</body>
+</html>
